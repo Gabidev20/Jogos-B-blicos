@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu Jogo Bíblico</title>
+<meta name="description" content="Questionários e jogos bíblicos para crianças e adolescentes, gerados a partir das publicações oficiais do jw.org.">
+<meta name="theme-color" content="#131228">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Roboto+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23131228'/%3E%3Cpath d='M28 26h20c6 0 10 4 10 10v40c0-5-4-8-10-8H28z' fill='%232F4BD8'/%3E%3Cpath d='M72 26H52c-6 0-10 4-10 10v40c0-5 4-8 10-8h20z' fill='%23FFB627'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="topbar">
+  <div class="topbar__in">
+    <a class="brand" href="#/" aria-label="Meu Jogo Bíblico — início">
+      <span class="brand__glyph" aria-hidden="true">
+        <svg viewBox="0 0 100 100" width="38" height="38">
+          <rect width="100" height="100" rx="24" fill="var(--leading)"></rect>
+          <path d="M28 26h20c6 0 10 4 10 10v40c0-5-4-8-10-8H28z" fill="var(--accent)"></path>
+          <path d="M72 26H52c-6 0-10 4-10 10v40c0-5 4-8 10-8h20z" fill="var(--amber)"></path>
+          <circle cx="50" cy="20" r="5" fill="var(--emerald)"></circle>
+        </svg>
+      </span>
+      <span class="brand__text">
+        <strong>Meu Jogo Bíblico</strong>
+        <small>Estudo da Bíblia que vira brincadeira</small>
+      </span>
+    </a>
+
+    <div class="topbar__right">
+      <button class="chip chip--profile" id="btnProfile" type="button" aria-haspopup="dialog">
+        <span class="chip__emoji" id="profileEmoji" aria-hidden="true">🙂</span>
+        <span class="chip__label" id="profileName">Escolher estudante</span>
+        <span class="chip__caret" aria-hidden="true">▾</span>
+      </button>
+      <button class="icon-btn" id="btnTheme" type="button" title="Alternar claro/escuro" aria-label="Alternar tema claro ou escuro">
+        <span data-theme-icon>◐</span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="tabs" aria-label="Seções do site">
+    <a class="tab" href="#/biblioteca" data-tab="biblioteca"><span aria-hidden="true">📚</span> Biblioteca</a>
+    <a class="tab" href="#/link" data-tab="link"><span aria-hidden="true">🔗</span> Link do jw.org</a>
+    <a class="tab" href="#/jogos" data-tab="jogos"><span aria-hidden="true">🎲</span> Jogos</a>
+    <a class="tab" href="#/estudantes" data-tab="estudantes"><span aria-hidden="true">🌱</span> Estudantes</a>
+  </nav>
+</header>
+
+<main id="conteudo" class="view" tabindex="-1"></main>
+
+<footer class="foot">
+  <p>Conteúdo baseado nas publicações <em>Aprenda com as Histórias da Bíblia</em> (lfb) e
+     <em>Seja Feliz para Sempre! — Um Curso da Bíblia para Você</em> (lff), de jw.org.
+     Este site é uma ferramenta de estudo pessoal e não substitui a leitura das publicações originais.</p>
+  <p class="foot__mini">Feito para estudar em família. Os dados dos estudantes ficam salvos apenas neste aparelho.</p>
+</footer>
+
+<div class="toast-stack" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__head">
+      <h2 id="modalTitle">Título</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal__body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="assets/js/core.js"></script>
+<script src="assets/js/data/lfb-a.js"></script>
+<script src="assets/js/data/lfb-b.js"></script>
+<script src="assets/js/data/lfb-c.js"></script>
+<script src="assets/js/data/lfb-d.js"></script>
+<script src="assets/js/data/lff-a.js"></script>
+<script src="assets/js/data/lff-b.js"></script>
+<script src="assets/js/data/lff-c.js"></script>
+<script src="assets/js/data/lff-d.js"></script>
+<script src="assets/js/catalog.js"></script>
+<script src="assets/js/games.js"></script>
+<script src="assets/js/ui.js"></script>
+</body>
+</html>

@@ -87,8 +87,9 @@
       '<h1 style="font-size:clamp(1.7rem,5.4vw,2.6rem);margin-top:10px">' +
       (s ? 'Oi, ' + esc(s.name) + '! ' + esc(s.emoji) + ' Qual lição vamos jogar hoje?'
          : 'Estudo da Bíblia que vira brincadeira') + '</h1>' +
-      '<p class="lead" style="margin-top:10px">Escolha uma lição dos dois livros já carregados ou cole um link do ' +
-      'jw.org. O site monta o questionário e os seis jogos com o conteúdo exato daquela lição.</p>';
+      '<p class="lead" style="margin-top:10px">Escolha uma lição dos dois livros já carregados — ou cole o link de ' +
+      'qualquer artigo ou vídeo do jw.org e o site lê aquela página e monta o questionário e os sete jogos ' +
+      'sobre o assunto dela.</p>';
 
     var acts = h('div', 'row');
     acts.style.marginTop = '16px';
@@ -106,10 +107,14 @@
     var sec = h('section', 'stack');
     sec.appendChild(el('div', { class: 'section-head' },
       '<div><div class="eyebrow">Biblioteca pronta</div><h2>Dois livros, ' +
-      (MJB.BY_BOOK.lfb.length + MJB.BY_BOOK.lff.length) + ' lições indexadas</h2></div>'));
+      (MJB.BY_BOOK.lfb.length + MJB.BY_BOOK.lff.length) + ' lições indexadas' +
+      (MJB.BY_BOOK.web.length
+        ? ' + ' + MJB.BY_BOOK.web.length + ' material(is) seu(s)' : '') +
+      '</h2></div>'));
 
     var books = h('div', 'books');
-    ['lfb', 'lff'].forEach(function (id) {
+    var idsLivros = MJB.BY_BOOK.web.length ? ['lfb', 'lff', 'web'] : ['lfb', 'lff'];
+    idsLivros.forEach(function (id) {
       var B = MJB.BOOKS[id];
       var done = countDone(id);
       var a = el('a', { class: 'bookcard', href: '#/livro/' + id, style: '--bc:' + B.color });
@@ -175,7 +180,7 @@
   /* =========================================================
      Livro → lista de lições
      ========================================================= */
-  MJB.route(/^\/livro\/(lfb|lff)$/, function (main, m) {
+  MJB.route(/^\/livro\/(lfb|lff|web)$/, function (main, m) {
     var id = m[1], B = MJB.BOOKS[id];
 
     main.appendChild(breadcrumb([{ label: 'Biblioteca', href: '#/biblioteca' }, { label: B.short }]));
@@ -185,8 +190,10 @@
       '<div class="eyebrow">' + esc(B.sym) + ' · jw.org</div>' +
       '<h1 style="font-size:clamp(1.5rem,4.6vw,2.2rem);margin-top:8px">' + esc(B.emoji) + ' ' + esc(B.title) + '</h1>' +
       '<p class="lead" style="margin-top:8px">' + esc(B.blurb) + '</p>' +
-      '<p style="margin-top:14px"><a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="' +
-      esc(MJB.bookUrl(id)) + '">Abrir a publicação no jw.org ↗</a></p>';
+      (id === 'web'
+        ? '<p style="margin-top:14px"><a class="btn btn--ghost btn--sm" href="#/link">🔗 Colar mais um link do jw.org</a></p>'
+        : '<p style="margin-top:14px"><a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="' +
+          esc(MJB.bookUrl(id)) + '">Abrir a publicação no jw.org ↗</a></p>');
     main.appendChild(head);
 
     var tools = h('section', 'lesson-toolbar');
@@ -265,6 +272,20 @@
     var edit = el('a', { class: 'btn btn--ghost btn--sm', href: '#/editor/' + L.id }, '✏️ Criador de Jogos');
     headRow.appendChild(edit);
     sec.appendChild(headRow);
+
+    // material vindo de um link: refazer as perguntas ou apagar
+    if (L.book === 'web') {
+      var gerRow = h('div', 'row');
+      var reger = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' },
+        '🔄 Gerar as perguntas de novo');
+      reger.addEventListener('click', function () { MJB.regerar(L); });
+      var apagar = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' },
+        '🗑️ Apagar este material');
+      apagar.addEventListener('click', function () { confirmarApagarWeb(L); });
+      gerRow.appendChild(reger);
+      gerRow.appendChild(apagar);
+      sec.appendChild(gerRow);
+    }
 
     var grid = h('div', 'games');
     MJB.GAMES.forEach(function (G) {
@@ -376,15 +397,19 @@
   }
 
   /* =========================================================
-     Link do jw.org
+     Link do jw.org  →  questionário e jogos sobre o tema do link
      ========================================================= */
+
+  var API = 'api/extrair?url=';
+
   MJB.route(/^\/link$/, function (main) {
     var head = h('section', 'panel panel--glass');
     head.innerHTML =
       '<div class="eyebrow">Somente jw.org</div>' +
       '<h1 style="font-size:clamp(1.5rem,4.6vw,2.2rem);margin-top:8px">Cole o link do artigo ou vídeo</h1>' +
-      '<p class="lead" style="margin-top:8px">O site aceita apenas endereços do domínio oficial ' +
-      '<strong>jw.org</strong>. A partir do link, ele identifica a lição e gera o questionário e os jogos.</p>';
+      '<p class="lead" style="margin-top:8px">Vale qualquer página do domínio oficial <strong>jw.org</strong>: ' +
+      'artigo, matéria de revista, lição de livro ou vídeo. O site lê o texto daquela página e monta ' +
+      'o questionário e os sete jogos em cima do assunto dela.</p>';
     main.appendChild(head);
 
     var form = h('section', 'panel stack');
@@ -392,13 +417,14 @@
       '<div class="field">' +
       '<label for="urlIn">Endereço do jw.org</label>' +
       '<input class="input" id="urlIn" type="url" inputmode="url" spellcheck="false" ' +
-      'placeholder="https://www.jw.org/pt/biblioteca/livros/...">' +
+      'placeholder="https://www.jw.org/pt/...">' +
       '</div>';
 
     var actions = h('div', 'row');
     var go = el('button', { class: 'btn', type: 'button' }, '✨ Gerar questionário e jogos');
     var exemplo = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Usar um exemplo');
-    actions.appendChild(go); actions.appendChild(exemplo);
+    var colar = el('button', { class: 'btn btn--ghost', type: 'button' }, '📋 Colar o texto à mão');
+    actions.appendChild(go); actions.appendChild(exemplo); actions.appendChild(colar);
     form.appendChild(actions);
     main.appendChild(form);
 
@@ -408,10 +434,11 @@
     var input = form.querySelector('#urlIn');
 
     exemplo.addEventListener('click', function () {
-      input.value = 'https://www.jw.org/pt/biblioteca/livros/aprenda-com-as-historias-da-biblia/5/a-arca-de-noe/';
+      input.value = 'https://www.jw.org/pt/ensinos-biblicos/ciencia/teve-um-projeto/braco-polvo/';
       input.classList.remove('input--invalid', 'input--valid');
       input.focus();
     });
+    colar.addEventListener('click', function () { formularioTexto(out, input.value.trim()); });
 
     input.addEventListener('input', function () {
       input.classList.remove('input--invalid', 'input--valid');
@@ -421,94 +448,334 @@
     });
     input.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') go.click(); });
 
-    go.addEventListener('click', function () {
-      out.innerHTML = '';
-      var r = MJB.checkUrl(input.value);
+    go.addEventListener('click', function () { processar(input, out, go); });
 
-      if (!r.ok) {
-        input.classList.add('input--invalid');
-        input.focus();
-        var msg, det;
-        if (r.reason === 'vazio') {
-          msg = 'Cole um link primeiro';
-          det = 'O campo está vazio. Copie o endereço da lição no site jw.org e cole aqui.';
-        } else if (r.reason === 'formato' || r.reason === 'protocolo') {
-          msg = 'Esse texto não parece um endereço de site';
-          det = 'Confira se o link começa com https:// e foi copiado inteiro.';
-        } else {
-          msg = 'Somente links do jw.org são aceitos';
-          det = 'O endereço enviado é de “' + r.host + '”. Esta ferramenta trabalha exclusivamente com ' +
-                'conteúdo do site oficial jw.org. Copie o link diretamente de jw.org e tente de novo.';
-        }
-        out.appendChild(el('div', { class: 'note note--bad' },
-          '<span class="note__icon" aria-hidden="true">🚫</span>' +
-          '<span><strong>' + esc(msg) + '</strong>' + esc(det) + '</span>'));
-        MJB.toast(msg, 'bad');
-        return;
-      }
-
-      input.classList.add('input--valid');
-      var match = MJB.matchUrl(r.url);
-
-      if (match.lesson) {
-        out.appendChild(el('div', { class: 'note note--ok' },
-          '<span class="note__icon" aria-hidden="true">✅</span>' +
-          '<span><strong>Link do jw.org reconhecido</strong>Identifiquei ' +
-          esc(MJB.BOOKS[match.lesson.book].unit.toLowerCase()) + ' ' + match.lesson.n + ' — ' +
-          '“' + esc(match.lesson.title) + '” (' + esc(MJB.BOOKS[match.lesson.book].short) + ').</span>'));
-        out.appendChild(generatedPanel(match.lesson));
-        MJB.toast('Questionário gerado!', 'ok');
-        return;
-      }
-
-      out.appendChild(el('div', { class: 'note note--warn' },
-        '<span class="note__icon" aria-hidden="true">🧭</span>' +
-        '<span><strong>Link válido, mas não identifiquei a lição exata</strong>' +
-        'O endereço é do jw.org, porém não bate com nenhuma lição do catálogo com segurança. ' +
-        'Escolha abaixo a lição correspondente — assim o questionário sai exatamente igual ao conteúdo dela.</span>'));
-
-      var pick = h('div', 'panel stack');
-      pick.innerHTML = '<div class="eyebrow">Lições parecidas</div>';
-      var grid = h('div', 'lessons');
-      var cands = match.candidates.length ? match.candidates : MJB.BY_BOOK.lfb.slice(0, 6);
-      cands.forEach(function (L) { grid.appendChild(lessonItem(L, true)); });
-      pick.appendChild(grid);
-      pick.appendChild(el('p', { class: 'muted' },
-        'Se preferir, abra a <a href="#/biblioteca">biblioteca completa</a> e escolha pelo menu.'));
-      out.appendChild(pick);
-    });
+    // materiais já gerados em outras vezes
+    if (MJB.BY_BOOK.web.length) main.appendChild(painelMeusMateriais());
   });
 
-  /** Painel mostrado depois que o link é reconhecido. */
-  function generatedPanel(L) {
+  /** Caminho principal: valida o domínio, lê a página e gera o material. */
+  function processar(input, out, botao) {
+    out.innerHTML = '';
+    var r = MJB.checkUrl(input.value);
+
+    if (!r.ok) {
+      input.classList.add('input--invalid');
+      input.focus();
+      out.appendChild(avisoDominio(r));
+      MJB.toast(r.reason === 'dominio' ? 'Somente links do jw.org' : 'Link inválido', 'bad');
+      return;
+    }
+
+    input.classList.add('input--valid');
+
+    // já gerei este mesmo endereço antes?
+    var jaTem = MJB.webPorFonte(r.url);
+    if (jaTem) {
+      out.appendChild(el('div', { class: 'note note--ok' },
+        '<span class="note__icon" aria-hidden="true">✅</span>' +
+        '<span><strong>Este link já virou material aqui</strong>' +
+        'Abrindo “' + esc(jaTem.title) + '”. Quer refazer as perguntas do zero? ' +
+        'Use o botão “Gerar de novo” na página do material.</span>'));
+      setTimeout(function () { MJB.go('/licao/' + jaTem.id); }, 700);
+      return;
+    }
+
+    // o link aponta para uma lição dos dois livros já carregados?
+    // nesse caso o banco de perguntas conferido vale mais do que gerar na hora
+    var achada = MJB.matchUrl(r.url);
+    if (achada.lesson) {
+      out.appendChild(painelCatalogo(achada.lesson, r.url, out, botao, input));
+      MJB.toast('Lição reconhecida no catálogo!', 'ok');
+      return;
+    }
+
+    lerEGerar(r.url, out, botao);
+  }
+
+  /** Lê a página no jw.org e monta o material. */
+  function lerEGerar(url, out, botao) {
+    botao.disabled = true;
+    var antes = botao.textContent;
+    botao.textContent = '⏳ Lendo a página do jw.org...';
+    out.appendChild(el('div', { class: 'note' },
+      '<span class="note__icon" aria-hidden="true">📖</span>' +
+      '<span><strong>Lendo o material no jw.org…</strong>' +
+      'Estou abrindo a página, separando o texto e montando as perguntas. ' +
+      'Em vídeos eu uso as legendas, então pode levar alguns segundos.</span>'));
+
+    fetch(API + encodeURIComponent(url), { cache: 'no-store' })
+      .then(function (resp) {
+        if (resp.status === 404) throw new Error('sem-servidor');
+        return resp.json();
+      })
+      .then(function (doc) {
+        botao.disabled = false; botao.textContent = antes;
+        out.innerHTML = '';
+        if (!doc.ok) {
+          out.appendChild(avisoLeitura(doc));
+          formularioTexto(out, url);
+          return;
+        }
+        gerarEAbrir(doc, out);
+      })
+      .catch(function (erro) {
+        botao.disabled = false; botao.textContent = antes;
+        out.innerHTML = '';
+        out.appendChild(avisoSemServidor(erro));
+        formularioTexto(out, url);
+      });
+  }
+
+  /** Gera o material e leva o estudante direto para os jogos. */
+  function gerarEAbrir(doc, out) {
+    var res = MJB.Gerador.gerar(doc);
+
+    if (!res.ok) {
+      out.appendChild(el('div', { class: 'note note--warn' },
+        '<span class="note__icon" aria-hidden="true">🧭</span>' +
+        '<span><strong>Essa página tem pouco texto para virar um jogo</strong>' +
+        'Consegui ' + res.perguntas + ' pergunta(s) — o mínimo é 10. Páginas que são só ' +
+        'uma capa de vídeo costumam ser assim. Se for um vídeo, copie o link pelo botão ' +
+        '<em>Compartilhar</em> do próprio vídeo no jw.org (ele traz as legendas). ' +
+        'Ou cole o texto do material no campo abaixo.</span>'));
+      formularioTexto(out, doc.url);
+      return;
+    }
+
+    var L = MJB.salvarWeb(res.lesson);
+    MJB.toast('Questionário e jogos gerados!', 'ok');
+    MJB.confetti();
+    out.appendChild(painelGerado(L));
+  }
+
+  /* ---------------- avisos ---------------- */
+
+  function avisoDominio(r) {
+    var msg, det;
+    if (r.reason === 'vazio') {
+      msg = 'Cole um link primeiro';
+      det = 'O campo está vazio. Copie o endereço do artigo ou vídeo no jw.org e cole aqui.';
+    } else if (r.reason === 'formato' || r.reason === 'protocolo') {
+      msg = 'Esse texto não parece um endereço de site';
+      det = 'Confira se o link começa com https:// e foi copiado inteiro.';
+    } else {
+      msg = 'Somente links do jw.org são aceitos';
+      det = 'O endereço enviado é de “' + r.host + '”. Esta ferramenta trabalha exclusivamente com ' +
+            'conteúdo do site oficial jw.org. Copie o link diretamente de jw.org e tente de novo.';
+    }
+    return el('div', { class: 'note note--bad' },
+      '<span class="note__icon" aria-hidden="true">🚫</span>' +
+      '<span><strong>' + esc(msg) + '</strong>' + esc(det) + '</span>');
+  }
+
+  function avisoLeitura(doc, url) {
+    var det = doc.reason === 'http'
+      ? 'O jw.org não encontrou essa página. Confira se o endereço está completo e ainda existe.'
+      : doc.reason === 'rede'
+        ? 'Não consegui chegar ao jw.org. Verifique sua conexão com a internet.'
+        : 'Consegui abrir o endereço, mas não achei texto de artigo nele.';
+    return el('div', { class: 'note note--warn' },
+      '<span class="note__icon" aria-hidden="true">📡</span>' +
+      '<span><strong>Não deu para ler essa página</strong>' + esc(det) +
+      (doc.detail ? ' <small>(' + esc(String(doc.detail).slice(0, 120)) + ')</small>' : '') +
+      '</span>');
+  }
+
+  function avisoSemServidor(erro) {
+    var semServidor = String(erro && erro.message) === 'sem-servidor';
+    return el('div', { class: 'note note--warn' },
+      '<span class="note__icon" aria-hidden="true">🔌</span>' +
+      '<span><strong>A leitura automática está desligada</strong>' +
+      (semServidor
+        ? 'O site está aberto sem o servidor de leitura. Feche esta janela, abra o terminal na pasta do projeto e rode <code>python servidor.py</code>. '
+        : 'Não consegui falar com o servidor local. ') +
+      'Enquanto isso, você pode colar o texto do material aqui embaixo — o resultado é o mesmo.</span>');
+  }
+
+  /* ---------------- colar o texto à mão ---------------- */
+
+  function formularioTexto(out, url) {
+    if (out.querySelector('[data-colar]')) {
+      out.querySelector('[data-colar] textarea').focus();
+      return;
+    }
+    var box = h('section', 'panel stack');
+    box.setAttribute('data-colar', '1');
+    box.innerHTML =
+      '<div class="eyebrow">Sem internet? Sem problema</div>' +
+      '<h2 style="font-size:1.25rem">Colar o texto do material</h2>' +
+      '<p class="muted">Abra a página no jw.org, selecione o texto do artigo, copie e cole aqui. ' +
+      'As perguntas saem do mesmo jeito.</p>' +
+      '<div class="field"><label for="txTitulo">Título do material</label>' +
+      '<input class="input" id="txTitulo" placeholder="Ex.: O incrível braço do polvo"></div>' +
+      '<div class="field"><label for="txCorpo">Texto do artigo ou do vídeo</label>' +
+      '<textarea class="textarea" id="txCorpo" rows="10" ' +
+      'placeholder="Cole aqui os parágrafos do material..."></textarea></div>';
+
+    var acao = h('div', 'row');
+    var criar = el('button', { class: 'btn', type: 'button' }, '✨ Gerar com este texto');
+    acao.appendChild(criar);
+    box.appendChild(acao);
+    out.appendChild(box);
+
+    criar.addEventListener('click', function () {
+      var t = box.querySelector('#txTitulo').value.trim();
+      var corpo = box.querySelector('#txCorpo').value.trim();
+      if (corpo.length < 400) {
+        MJB.toast('Cole um texto maior — pelo menos uns 3 parágrafos.', 'bad');
+        box.querySelector('#txCorpo').focus();
+        return;
+      }
+      var res = MJB.Gerador.gerarDeTexto(t || 'Material do jw.org', corpo, url || '');
+      if (!res.ok) {
+        MJB.toast('Com esse texto saíram só ' + res.perguntas + ' perguntas. Cole um pouco mais.', 'bad');
+        return;
+      }
+      var L = MJB.salvarWeb(res.lesson);
+      MJB.toast('Questionário e jogos gerados!', 'ok');
+      MJB.confetti();
+      MJB.go('/licao/' + L.id);
+    });
+  }
+
+  /* ---------------- painéis ---------------- */
+
+  /** Prévia do que foi gerado, com atalho para cada jogo. */
+  function painelGerado(L) {
     var c = MJB.content(L.id);
-    var B = MJB.BOOKS[L.book];
     var panel = h('section', 'panel stack');
 
     panel.innerHTML =
+      '<div class="note note--ok" style="margin-bottom:4px">' +
+      '<span class="note__icon" aria-hidden="true">✅</span>' +
+      '<span><strong>Pronto! Material lido e transformado em jogo</strong>' +
+      'Tudo abaixo saiu do texto desta página do jw.org.</span></div>' +
       '<div class="section-head"><div>' +
-      '<div class="eyebrow">Questionário gerado</div>' +
-      '<h2>' + c.q.length + ' perguntas sobre “' + esc(L.title) + '”</h2>' +
+      '<div class="eyebrow">' + (L.kind === 'video' ? 'Vídeo do jw.org' : 'Artigo do jw.org') + '</div>' +
+      '<h2>' + esc(L.title) + '</h2>' +
       '</div></div>' +
-      '<p class="muted">Prévia das perguntas. Você pode jogar assim ou editar tudo no Criador de Jogos.</p>';
+      '<div class="hero-tags">' +
+      '<span class="hero-tag">🧭 ' + c.q.length + ' perguntas</span>' +
+      '<span class="hero-tag">⚖️ ' + c.vf.length + ' frases V/F</span>' +
+      '<span class="hero-tag">🔤 ' + c.w.length + ' palavras-chave</span>' +
+      (L.verse ? '<span class="hero-tag">📖 ' + esc(L.verse) + '</span>' : '') +
+      '</div>' +
+      '<p class="muted">Prévia das perguntas. Você pode jogar assim ou ajustar tudo no Criador de Jogos.</p>';
 
     var ol = el('ol');
     ol.style.cssText = 'margin:0;padding-left:22px;display:flex;flex-direction:column;gap:7px';
-    c.q.forEach(function (row) {
-      ol.appendChild(el('li', null, esc(row[0])));
-    });
+    c.q.slice(0, 6).forEach(function (row) { ol.appendChild(el('li', null, esc(row[0]))); });
+    if (c.q.length > 6) {
+      ol.appendChild(el('li', { class: 'muted' }, 'e mais ' + (c.q.length - 6) + ' perguntas…'));
+    }
     panel.appendChild(ol);
 
     var row = h('div', 'row');
-    row.appendChild(el('a', { class: 'btn', href: '#/jogar/' + L.id + '/quiz' }, '🧭 Começar o questionário'));
-    row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/licao/' + L.id }, '🎲 Ver os 6 jogos'));
+    row.appendChild(el('a', { class: 'btn', href: '#/licao/' + L.id }, '🎲 Abrir os 7 jogos'));
+    row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/jogar/' + L.id + '/quiz' }, '🧭 Começar o questionário'));
     row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/editor/' + L.id }, '✏️ Editar perguntas'));
     panel.appendChild(row);
-
-    panel.appendChild(el('p', { class: 'muted' },
-      B.unit + ' ' + L.n + ' de ' + B.short + (L.verse ? ' · Texto base: ' + L.verse : '')));
     return panel;
   }
+
+  /**
+   * O link caiu numa lição dos livros já carregados. Esse banco de perguntas
+   * foi conferido uma a uma, então ele vem primeiro — mas o estudante pode
+   * pedir para gerar do texto da página mesmo assim.
+   */
+  function painelCatalogo(L, url, out, botao, input) {
+    var B = MJB.BOOKS[L.book];
+    var c = MJB.content(L.id);
+    var panel = h('section', 'panel stack');
+
+    panel.innerHTML =
+      '<div class="note note--ok" style="margin-bottom:4px">' +
+      '<span class="note__icon" aria-hidden="true">✅</span>' +
+      '<span><strong>Este link é ' + esc(B.unit.toLowerCase()) + ' ' + L.n + ' de ' + esc(B.short) + '</strong>' +
+      'Essa lição já está no site com as perguntas prontas e revisadas — melhores do que as que eu ' +
+      'montaria na hora.</span></div>' +
+      '<div class="section-head"><div>' +
+      '<div class="eyebrow">Questionário pronto</div>' +
+      '<h2>' + c.q.length + ' perguntas sobre “' + esc(L.title) + '”</h2>' +
+      '</div></div>';
+
+    var ol = el('ol');
+    ol.style.cssText = 'margin:0;padding-left:22px;display:flex;flex-direction:column;gap:7px';
+    c.q.slice(0, 5).forEach(function (row) { ol.appendChild(el('li', null, esc(row[0]))); });
+    if (c.q.length > 5) {
+      ol.appendChild(el('li', { class: 'muted' }, 'e mais ' + (c.q.length - 5) + ' perguntas…'));
+    }
+    panel.appendChild(ol);
+
+    var row = h('div', 'row');
+    row.appendChild(el('a', { class: 'btn', href: '#/licao/' + L.id }, '🎲 Abrir os 7 jogos'));
+    row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/jogar/' + L.id + '/quiz' }, '🧭 Começar o questionário'));
+    var outro = el('button', { class: 'btn btn--ghost', type: 'button' },
+      '🔁 Prefiro gerar do texto da página');
+    outro.addEventListener('click', function () {
+      out.innerHTML = '';
+      lerEGerar(url, out, botao);
+    });
+    row.appendChild(outro);
+    panel.appendChild(row);
+    return panel;
+  }
+
+  /** Lista dos materiais que o usuário já gerou. */
+  function painelMeusMateriais() {
+    var sec = h('section', 'stack');
+    sec.appendChild(el('div', { class: 'section-head' },
+      '<div><div class="eyebrow">Já estão guardados aqui</div>' +
+      '<h2>Meus materiais do jw.org (' + MJB.BY_BOOK.web.length + ')</h2></div>'));
+    var grid = h('div', 'lessons');
+    MJB.BY_BOOK.web.slice().reverse().forEach(function (L) {
+      grid.appendChild(lessonItem(L, true));
+    });
+    sec.appendChild(grid);
+    return sec;
+  }
+
+  /** Confirmação antes de apagar um material gerado. */
+  function confirmarApagarWeb(L) {
+    var box = h('div', 'stack');
+    box.innerHTML =
+      '<p>Apagar <strong>' + esc(L.title) + '</strong>?</p>' +
+      '<p class="muted">As perguntas, os jogos e o placar deste material somem. ' +
+      'Você pode colar o link de novo depois para gerar tudo outra vez.</p>';
+    var row = h('div', 'row');
+    var sim = el('button', { class: 'btn btn--danger', type: 'button' }, 'Apagar material');
+    var nao = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Cancelar');
+    sim.addEventListener('click', function () {
+      MJB.removerWeb(L.id);
+      MJB.closeModal();
+      MJB.toast('Material apagado.', 'ok');
+      MJB.go('/link');
+    });
+    nao.addEventListener('click', function () { MJB.closeModal(); });
+    row.appendChild(sim); row.appendChild(nao);
+    box.appendChild(row);
+    MJB.openModal('Apagar material', box);
+  }
+
+  /** Refaz as perguntas de um material gerado, lendo a página de novo. */
+  MJB.regerar = function (L) {
+    if (!L.source) { MJB.toast('Este material não guardou o endereço de origem.', 'bad'); return; }
+    MJB.toast('Lendo a página de novo…');
+    fetch(API + encodeURIComponent(L.source), { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (doc) {
+        if (!doc.ok) throw new Error(doc.reason || 'leitura');
+        var res = MJB.Gerador.gerar(doc);
+        if (!res.ok) throw new Error('curto');
+        MJB.salvarWeb(res.lesson);
+        MJB.toast('Perguntas refeitas!', 'ok');
+        MJB.render();
+      })
+      .catch(function () {
+        MJB.toast('Não consegui reler agora. Confira se o servidor está rodando.', 'bad');
+      });
+  };
 
   /* =========================================================
      Estudantes (CRUD)

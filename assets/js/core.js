@@ -15,7 +15,8 @@
     activeId: null,
     theme: null,          // null = segue o sistema
     progress: {},         // progress[studentId][lessonId][gameId] = {score, total, pct, at}
-    custom: {}            // custom[lessonId] = { q:[], vf:[], w:[], d:[], pop:[], mem:[] }
+    custom: {},           // custom[lessonId] = { q:[], vf:[], w:[], d:[], pop:[], mem:[] }
+    web: []               // materiais gerados a partir de links do jw.org
   };
 
   function load() {
@@ -406,6 +407,7 @@
   /* ---------------- inicialização ---------------- */
 
   function boot() {
+    if (MJB.carregarWeb) MJB.carregarWeb();
     applyTheme();
     applyAccent();
 

@@ -1,29 +1,35 @@
 # Meu Jogo Bíblico
 
 Plataforma web de estudo bíblico para **crianças (Kids)** e **adolescentes (Teens)**, com
-questionários e seis jogos gerados a partir do conteúdo exato de cada lição.
+questionário e seis jogos montados a partir do conteúdo exato de cada material.
 
-**Fonte exclusiva do conteúdo:** publicações oficiais do **jw.org**
-- *Aprenda com as Histórias da Bíblia* (símbolo `lfb`) — **103 histórias**
-- *Seja Feliz para Sempre! — Um Curso da Bíblia para Você* (símbolo `lff`) — **60 lições**
+**Fonte exclusiva do conteúdo:** o site oficial **jw.org**
+- *Aprenda com as Histórias da Bíblia* (símbolo `lfb`) — **103 histórias** já carregadas
+- *Seja Feliz para Sempre! — Um Curso da Bíblia para Você* (símbolo `lff`) — **60 lições** já carregadas
+- **+ qualquer artigo ou vídeo do jw.org** que você colar pelo link
 
 ---
 
 ## Como abrir
 
-**Modo simples:** dê dois cliques em `index.html`.
-
-**Modo recomendado** (evita bloqueios do navegador em arquivos locais) — abra o terminal
-nesta pasta e rode:
+Abra o terminal nesta pasta e rode:
 
 ```bash
-python -m http.server 8321
+python servidor.py
 ```
 
-Depois acesse `http://localhost:8321` no navegador.
+O navegador abre sozinho em `http://localhost:8321`.
 
-Não há instalação, build nem dependências. Tudo funciona offline (só as fontes vêm da
-internet; sem elas o site usa fontes do sistema e continua funcionando).
+Esse é o modo completo: além de servir o site, o `servidor.py` é quem consegue **ler as
+páginas do jw.org** para gerar perguntas a partir de um link. Por segurança, o navegador
+não deixa uma página ler o conteúdo de outro site, então essa leitura acontece aqui, no
+seu computador.
+
+Dois cliques em `index.html` também funcionam, mas aí o campo de link só reconhece as
+lições dos dois livros — para qualquer outro endereço você precisa colar o texto à mão.
+
+Não há instalação, build nem dependências — só o Python 3 (qualquer versão 3.x). Para usar
+outra porta: `python servidor.py 9000`.
 
 ---
 
@@ -34,12 +40,29 @@ Os dois livros já vêm carregados e indexados por seção/parte. Ao abrir a **L
 os sete jogos usam **exclusivamente** o conteúdo da Lição X — a chave `lfb-<n>` / `lff-<n>`
 amarra título, texto base, perguntas, palavras-chave e pares ao número da lição.
 
-### 2. Link do jw.org
-Cole o endereço de um artigo ou vídeo. O campo aceita **apenas** o domínio oficial
-`jw.org` (e subdomínios como `wol.jw.org`); qualquer outro site mostra um alerta vermelho
-explicando o motivo. Reconhecido o link, o site identifica a lição e gera o questionário
-na hora. Se o endereço for do jw.org mas não bater com nenhuma lição, ele sugere as
-lições mais parecidas em vez de adivinhar.
+### 2. Link do jw.org → questionário e jogos sobre aquele assunto
+Cole o endereço de **qualquer** artigo, matéria de revista, lição de livro ou vídeo do
+jw.org. O campo aceita **apenas** o domínio oficial `jw.org` (e subdomínios como
+`wol.jw.org`); qualquer outro site mostra um alerta vermelho explicando o motivo.
+
+O que acontece depois:
+
+1. Se o link for de uma das **163 lições já carregadas**, o site abre o banco de
+   perguntas pronto — ele foi conferido uma a uma, então vale mais do que gerar na hora.
+   (Ainda assim existe o botão *Prefiro gerar do texto da página*.)
+2. Se for **qualquer outra página**, o site lê o texto dela e monta na hora de 10 a 15
+   perguntas, as frases de Verdadeiro/Falso, as palavras-chave, os pares da memória, os
+   balões e as perguntas abertas — tudo sobre o assunto daquela página.
+3. Em **vídeos**, o texto vem das legendas oficiais do próprio vídeo. Copie o link pelo
+   botão *Compartilhar* do vídeo no jw.org (o endereço que tem `lank=pub-...`).
+
+Nada é inventado: toda resposta certa é uma palavra ou um trecho que está mesmo no
+material. Se a página tiver pouco texto (uma capa de vídeo, um índice), o site avisa e
+oferece o campo **Colar o texto à mão** — o resultado é o mesmo.
+
+Cada material gerado vira um item `web-1`, `web-2`… guardado neste aparelho, com botões
+de **gerar as perguntas de novo** e **apagar**. Eles aparecem como um terceiro "livro"
+na Biblioteca.
 
 ### 3. Sete modos de jogo por lição
 | Jogo | O que usa |
@@ -71,11 +94,13 @@ dele.
 
 ```
 index.html
+servidor.py                     serve o site e lê as páginas do jw.org
 assets/
   css/app.css                 identidade visual "Vitral" (tema claro e escuro)
   js/
     core.js                   armazenamento, perfis, tema, rotas, utilidades
     catalog.js                livros, índice de lições, validação de links do jw.org
+    gerador.js                monta perguntas e jogos a partir do texto de uma página
     games.js                  os sete jogos
     ui.js                     telas (biblioteca, lição, jogo, criador, estudantes)
     data/
@@ -99,14 +124,15 @@ partida. Para acrescentar ou corrigir conteúdo, basta editar esses arquivos (ou
 Criador de Jogos dentro do site).
 
 Se você editar algum arquivo e o navegador continuar mostrando a versão antiga, troque
-`?v=1` por `?v=2` nas tags `<script>` e `<link>` do `index.html`.
+`?v=2` por `?v=3` nas tags `<script>` e `<link>` do `index.html`.
 
 ---
 
 ## Privacidade
 
-Nada é enviado para a internet. Perfis, placares e edições ficam no `localStorage` do
-navegador, apenas neste aparelho.
+A **única** conexão externa é com o próprio jw.org, e só quando você cola um link e pede
+para gerar. Nenhum dado seu sai daqui: perfis, placares, materiais gerados e edições
+ficam no `localStorage` do navegador, apenas neste aparelho.
 
 ---
 

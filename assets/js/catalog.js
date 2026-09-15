@@ -59,12 +59,28 @@
       ]
     }
   };
+
+  /* Livro virtual: guarda o que o usuário gerou colando um link do jw.org. */
+  BOOKS.web = {
+    id: 'web',
+    title: 'Meus materiais do jw.org',
+    short: 'Materiais do link',
+    sym: 'link',
+    unit: 'Material',
+    unitPlural: 'materiais',
+    total: 0,
+    color: '#F2762E',
+    emoji: '🔗',
+    band: 'Kids e Teens',
+    blurb: 'Artigos e vídeos do jw.org que você colou aqui. Cada um virou questionário e jogos.',
+    sections: [{ n: 1, t: 'Gerados a partir de um link', from: 1, to: 99999 }]
+  };
   MJB.BOOKS = BOOKS;
 
   /* ---------------- índice de lições ---------------- */
 
   var LESSONS = {};   // id -> lição
-  var BY_BOOK = { lfb: [], lff: [] };
+  var BY_BOOK = { lfb: [], lff: [], web: [] };
   MJB.LESSONS = LESSONS;
   MJB.BY_BOOK = BY_BOOK;
 
@@ -99,7 +115,12 @@
         q: raw.q || [],
         vf: raw.vf || [],
         w: raw.w || [],
-        d: raw.d || []
+        d: raw.d || [],
+        pop: raw.pop || null,
+        mem: raw.mem || null,
+        source: raw.source || '',
+        kind: raw.kind || '',
+        createdAt: raw.createdAt || 0
       };
       LESSONS[id] = lesson;
       BY_BOOK[bookId].push(lesson);
@@ -111,6 +132,82 @@
   function getLesson(id) { return LESSONS[id] || null; }
   MJB.getLesson = getLesson;
 
+  /* ---------------- materiais gerados a partir de um link ---------------- */
+
+  /** Põe no catálogo tudo que já foi gerado em outras visitas. */
+  function carregarWeb() {
+    var salvos = MJB.state.web || [];
+    if (!salvos.length) return;
+    registerLessons('web', salvos);
+  }
+  MJB.carregarWeb = carregarWeb;
+
+  /**
+   * Guarda um material gerado e devolve a lição pronta para jogar.
+   * O `id` (web-1, web-2, ...) amarra o material aos seus jogos, do mesmo
+   * jeito que acontece com as lições dos livros.
+   */
+  function salvarWeb(gerado) {
+    var salvos = MJB.state.web || (MJB.state.web = []);
+
+    // mesmo endereço colado de novo: atualiza em vez de duplicar
+    var existente = null;
+    if (gerado.source) {
+      existente = salvos.filter(function (x) { return x.source === gerado.source; })[0] || null;
+    }
+
+    var n = existente ? existente.n : proximoN(salvos);
+    var bruto = {
+      n: n,
+      t: gerado.t, v: gerado.v, s: gerado.s,
+      q: gerado.q, vf: gerado.vf, w: gerado.w, d: gerado.d,
+      pop: gerado.pop || null, mem: gerado.mem || null,
+      source: gerado.source || '', kind: gerado.kind || 'artigo',
+      createdAt: Date.now()
+    };
+
+    if (existente) {
+      salvos[salvos.indexOf(existente)] = bruto;
+      var antiga = LESSONS['web-' + n];
+      if (antiga) BY_BOOK.web.splice(BY_BOOK.web.indexOf(antiga), 1);
+      delete LESSONS['web-' + n];
+      resetCustom('web-' + n);
+    } else {
+      salvos.push(bruto);
+    }
+
+    registerLessons('web', [bruto]);
+    MJB.save();
+    return LESSONS['web-' + n];
+  }
+  MJB.salvarWeb = salvarWeb;
+
+  function proximoN(salvos) {
+    var max = 0;
+    salvos.forEach(function (x) { if (x.n > max) max = x.n; });
+    return max + 1;
+  }
+
+  function removerWeb(id) {
+    var L = LESSONS[id];
+    if (!L || L.book !== 'web') return;
+    MJB.state.web = (MJB.state.web || []).filter(function (x) { return x.n !== L.n; });
+    BY_BOOK.web.splice(BY_BOOK.web.indexOf(L), 1);
+    delete LESSONS[id];
+    resetCustom(id);
+    MJB.save();
+  }
+  MJB.removerWeb = removerWeb;
+
+  /** Material já gerado a partir exatamente deste endereço. */
+  function webPorFonte(url) {
+    for (var i = 0; i < BY_BOOK.web.length; i++) {
+      if (BY_BOOK.web[i].source === url) return BY_BOOK.web[i];
+    }
+    return null;
+  }
+  MJB.webPorFonte = webPorFonte;
+
   /* ---------------- links oficiais ---------------- */
 
   function bookUrl(bookId) {
@@ -119,6 +216,7 @@
   MJB.bookUrl = bookUrl;
 
   function lessonUrl(lesson) {
+    if (lesson.source) return lesson.source;
     var b = BOOKS[lesson.book];
     return 'https://www.jw.org/pt/busca/?q=' +
       encodeURIComponent(lesson.title + ' ' + b.short) + '&p=par';
@@ -182,6 +280,7 @@
     var scored = [];
     Object.keys(LESSONS).forEach(function (id) {
       var L = LESSONS[id];
+      if (L.book === 'web') return;      // material gerado casa por endereço exato
       var titleTokens = MJB.fold(L.title).split(/[^a-z0-9]+/).filter(function (t) {
         return t && t.length > 2 && STOP.indexOf(t) === -1;
       });
@@ -213,7 +312,7 @@
    */
   function searchLessons(term, bookId) {
     var f = MJB.fold(term).trim();
-    var pool = bookId ? BY_BOOK[bookId] : BY_BOOK.lfb.concat(BY_BOOK.lff);
+    var pool = bookId ? (BY_BOOK[bookId] || []) : BY_BOOK.lfb.concat(BY_BOOK.lff, BY_BOOK.web);
     if (!f) return pool;
     var words = f.split(/\s+/).filter(Boolean);
     return pool.filter(function (L) {
@@ -237,8 +336,8 @@
       vf: c.vf || L.vf,
       w: c.w || L.w,
       d: c.d || L.d,
-      pop: c.pop || null,
-      mem: c.mem || null
+      pop: c.pop || L.pop || null,
+      mem: c.mem || L.mem || null
     };
   }
   MJB.content = content;

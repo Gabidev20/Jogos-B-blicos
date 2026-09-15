@@ -24,7 +24,7 @@ vf:[
 w:[
 ["REINO","Governo criado por Jeová no céu"],
 ["REI","Título de Jesus no Reino de Deus"],
-["CENTOEQUARENTA","Começo do número dos que reinam com Jesus"],
+["APOCALIPSE","Livro que fala dos 144 mil"],
 ["GOVERNO","O Reino é um de verdade, não um sentimento"],
 ["AUTORIDADE","Toda foi dada a Jesus no céu e na terra"],
 ["JUSTICA","Uma das marcas do governo de Jesus"],
@@ -126,7 +126,7 @@ vf:[
 w:[
 ["OBEDIENCIA","Principal modo de mostrar amor a Jeová"],
 ["LEALDADE","Qualidade que Jó mostrou nas provações"],
-["JO","Homem cuja integridade foi testada"],
+["SATANAS","Quem acusou os que servem a Deus"],
 ["INTEGRIDADE","O que Jó se recusou a abandonar"],
 ["CORACAO","Jeová quer obediência que venha dele"],
 ["PROVERBIOS","Livro com o convite de alegrar o coração de Jeová"],
@@ -283,7 +283,7 @@ q:[
 ["O que significa se abster de sangue?","Não ingerir de nenhuma forma, inclusive por transfusão","Só não beber","Só não comer","Só em casos religiosos"],
 ["Quais são as quatro partes principais do sangue?","Glóbulos vermelhos, glóbulos brancos, plaquetas e plasma","Água, sais, ferro e proteínas","Soro, células, ferro e cálcio","Hemácias, ferro, água e cálcio"],
 ["Que procedimentos vão claramente contra a lei de Deus?","Transfusão de sangue total ou de qualquer das quatro partes principais","Todo tipo de cirurgia","Todo exame de sangue","Toda vacina"],
-["E quanto às frações de sangue?","Cada cristão deve tomar a própria decisão","São sempre aceitas","São sempre recusadas","Decide o médico"],
+["O que a Bíblia diz sobre as frações de sangue?","Cada cristão deve tomar a própria decisão","São sempre aceitas","São sempre recusadas","Decide o médico"],
 ["Que texto lembra que cada um levará a própria carga?","Gálatas 6:5","Romanos 14:12","Tiago 1:5","Atos 24:16"],
 ["Como Tito 3:2 diz que devemos falar com os médicos?","Com respeito e brandura","Com firmeza dura","Sem explicar","Somente por escrito"]],
 vf:[

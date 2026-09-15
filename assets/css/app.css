@@ -511,7 +511,7 @@ a.hero-tag:hover{background:rgba(255,255,255,.26)}
 
 /* ---------- forca ---------- */
 .hang{display:grid;gap:18px;justify-items:center}
-.hang svg{width:min(260px,72vw);height:auto}
+.hang svg{width:min(190px,54vw);height:auto}
 .hang__word{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
 .hang__ltr{
   width:36px;height:46px;display:grid;place-items:center;
@@ -533,27 +533,32 @@ a.hero-tag:hover{background:rgba(255,255,255,.26)}
 /* ---------- memória ---------- */
 .mem-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
 .mem-card{
-  aspect-ratio:3/4;perspective:900px;border:0;background:none;padding:0;cursor:pointer;
+  display:block;width:100%;aspect-ratio:3/4;perspective:900px;
+  border:0;background:none;padding:0;cursor:pointer;
 }
 .mem-card__in{
-  position:relative;width:100%;height:100%;transform-style:preserve-3d;
-  transition:transform .45s cubic-bezier(.3,1.1,.4,1);border-radius:var(--r-md);
+  display:block;position:relative;width:100%;height:100%;border-radius:var(--r-md);
+  transition:transform .25s cubic-bezier(.3,1.4,.5,1);
 }
-.mem-card.is-open .mem-card__in,.mem-card.is-done .mem-card__in{transform:rotateY(180deg)}
+.mem-card.is-open .mem-card__in,.mem-card.is-done .mem-card__in{transform:scale(1.04)}
 .mem-face{
-  position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r-md);
+  position:absolute;inset:0;border-radius:var(--r-md);
   display:grid;place-items:center;padding:9px;text-align:center;
   font-weight:700;font-size:.82rem;line-height:1.24;overflow:hidden;
+  transition:opacity .22s ease;
 }
 .mem-back{
   background:linear-gradient(140deg,var(--accent),color-mix(in srgb,var(--accent) 45%,var(--leading)));
-  color:#fff;font-size:1.7rem;
+  color:#fff;font-size:1.7rem;opacity:1;
 }
 .mem-front{
-  transform:rotateY(180deg);background:var(--panel);border:2px solid var(--line-strong);color:var(--ink);
+  background:var(--panel);border:2px solid var(--line-strong);color:var(--ink);opacity:0;
 }
+.mem-card.is-open .mem-back,.mem-card.is-done .mem-back{opacity:0}
+.mem-card.is-open .mem-front,.mem-card.is-done .mem-front{opacity:1}
 .mem-front img{width:100%;height:100%;object-fit:cover;border-radius:10px}
 .mem-card.is-done .mem-front{border-color:var(--ok);background:var(--ok-soft)}
+.mem-card.is-done{animation:popIn .3s ease}
 
 /* ---------- dissertativas ---------- */
 .ess-hits{display:flex;flex-wrap:wrap;gap:6px}

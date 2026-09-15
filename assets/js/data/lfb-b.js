@@ -265,7 +265,7 @@ w:[
 ["TRESENTOS","Número de homens que foram à guerra"],
 ["BUZINAS","Foram tocadas na noite do ataque"],
 ["TOCHAS","Estavam escondidas dentro dos jarros"],
-["LA","Usada no teste de Gideão"],
+["VELO","Pedaço de lã usado no teste de Gideão"],
 ["JARROS","Foram quebrados no ataque"],
 ["HUMILDADE","Qualidade de Gideão ao dizer que não era ninguém"]],
 d:[
@@ -571,7 +571,7 @@ w:[
 ["URIAS","Soldado marido de Bate-Seba"],
 ["NATA","Profeta que corrigiu o rei"],
 ["OVELHA","A única do homem pobre na história de Natã"],
-["ARREPENDIMENTO","O que levou Davi a ser perdoado"],
+["CONFESSAR","O que Davi fez em vez de esconder o erro"],
 ["TEMPLO","Salomão foi escolhido para construí-lo"],
 ["HUMILDADE","Davi mostrou ao admitir o erro"]],
 d:[

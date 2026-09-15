@@ -262,9 +262,9 @@ vf:[
 w:[
 ["ABRAAO","Homem de Ur que obedeceu e viajou para Canaã"],
 ["SARA","Esposa de Abraão"],
-["UR","Cidade onde Abraão morava"],
+["VIAGEM","Longa jornada de Ur até Canaã"],
 ["CANAA","Terra para onde Jeová o mandou"],
-["LO","Sobrinho que foi na viagem"],
+["SOBRINHO","Grau de parentesco de Ló com Abraão"],
 ["TERA","Pai de Abraão"],
 ["OBEDIENCIA","O que Abraão mostrou ao sair de casa"],
 ["PROMESSA","O que Jeová fez sobre a família de Abraão"]],
@@ -300,7 +300,7 @@ w:[
 ["ANJOS","Os três visitantes de Abraão"],
 ["BARRACA","Tipo de casa onde Abraão e Sara moravam"],
 ["RISADA","Significado do nome Isaque"],
-["FE","O que Sara teve para receber o filho prometido"],
+["VISITA","Os três anjos fizeram uma a Abraão"],
 ["PROMESSA","Jeová sempre cumpre as dele"]],
 d:[
 ["O que os anjos disseram para Abraão?","que teriam um filho|dentro de um ano"],
@@ -328,7 +328,7 @@ vf:[
 ["Os anjos ajudaram Ló e a família a sair da cidade.",1,""],
 ["Jesus mandou lembrarmos da mulher de Ló.",1,""]],
 w:[
-["LO","Sobrinho de Abraão que morou perto de Sodoma"],
+["SOBRINHO","O que Ló era de Abraão"],
 ["SODOMA","Cidade destruída por causa da maldade"],
 ["GOMORRA","A outra cidade destruída junto com Sodoma"],
 ["ZOAR","Cidade para onde Ló fugiu"],
@@ -366,7 +366,7 @@ w:[
 ["CARNEIRO","Animal oferecido no lugar de Isaque"],
 ["AMIGO","Como Jeová passou a chamar Abraão"],
 ["LENHA","O que Isaque carregou até o monte"],
-["FE","O que Abraão mostrou ao obedecer"],
+["CONFIANCA","O que Abraão teve em Jeová ao obedecer"],
 ["ANJO","Chamou Abraão e o impediu bem na hora"],
 ["FILHO","Isaque era o único de Abraão e Sara"],
 ["BENCAO","O que Jeová prometeu à família de Abraão"]],
@@ -532,8 +532,8 @@ vf:[
 ["Eliú ajudou Jó a entender que Jeová nunca faria maldade.",1,""],
 ["Jó viveu muitos anos e foi feliz depois disso.",1,""]],
 w:[
-["JO","Homem fiel que morava em Uz"],
-["UZ","Lugar onde Jó morava"],
+["PACIENCIA","Qualidade que Jó mostrou no sofrimento"],
+["RIQUEZA","Jó tinha muita antes das provações"],
 ["SATANAS","Quem causou o sofrimento de Jó"],
 ["FERIDAS","Doença que deixou Jó com muita dor"],
 ["ELIU","Jovem que falou as coisas certas"],
@@ -720,7 +720,7 @@ s:"Jeová abriu o Mar Vermelho, salvou Israel e destruiu o exército de Faraó."
 q:[
 ["O que Faraó fez ao saber que o povo tinha saído?","Preparou os carros de guerra e foi atrás deles","Ficou feliz","Mandou presentes","Fugiu"],
 ["Como Jeová mostrava o caminho de dia?","Com uma nuvem","Com uma estrela","Com fogo","Com um anjo visível"],
-["E de noite?","Com uma luz de fogo","Com a Lua","Com tochas","Com uma nuvem"],
+["Como Jeová mostrava o caminho de noite?","Com uma luz de fogo","Com a Lua","Com tochas","Com uma nuvem"],
 ["Por que os israelitas ficaram sem saída?","Na frente estava o mar e atrás vinham os egípcios","O caminho tinha sumido","Faltou comida","Choveu muito"],
 ["O que Moisés disse ao povo?","Não tenham medo, vamos ver como Jeová vai nos salvar","Voltem para o Egito","Lutem contra os egípcios","Escondam-se"],
 ["Para onde a nuvem se mudou?","Para trás dos israelitas, na frente dos egípcios","Para o alto","Para o Egito","Para Canaã"],

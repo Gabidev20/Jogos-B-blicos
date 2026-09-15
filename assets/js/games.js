@@ -273,7 +273,7 @@
       timers.push(setTimeout(function () { next.focus(); }, 60));
     }
 
-    var FACES = ['🎈', '🎈', '🎈', '🎈'];
+    var FACES = ['🍀', '🌈', '🐝', '🌻'];
     function emojiFor(text, k) {
       // se o usuário colou um emoji curto como alternativa, ele vira a figura do balão
       var chars = Array.from ? Array.from(String(text)) : String(text).split('');
@@ -296,6 +296,8 @@
       if (/amor|amigo|amizade|familia|coracao/.test(t)) return '💚';
       return FACES[k % FACES.length];
     }
+
+    draw();
   };
 
   /* =========================================================

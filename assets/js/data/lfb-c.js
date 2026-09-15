@@ -63,7 +63,7 @@ w:[
 ["TEMPESTADE","Começou durante a fuga de Jonas"],
 ["CABACEIRO","Planta que deu sombra a Jonas"],
 ["PACIENCIA","Qualidade de Jeová com Jonas e com Nínive"],
-["ARREPENDIMENTO","O que os ninivitas mostraram"]],
+["MISERICORDIA","O que Jeová mostrou aos ninivitas"]],
 d:[
 ["Que lições Jeová queria ensinar para Jonas?","misericórdia|paciência|valor das pessoas"],
 ["O que podemos aprender do que aconteceu com Jonas?","não fugir das tarefas|Jeová perdoa|sermos pacientes"],

@@ -306,7 +306,7 @@
       desc: 'Frases rápidas para decidir se estão certas ou erradas.' },
     { id: 'balao', name: 'Estourar Balão', emoji: '🎈', color: '#E5468E',
       desc: 'Estoure o balão que traz a resposta certa antes que ele suba.' },
-    { id: 'forca', name: 'Jogo da Forca', emoji: '🪢', color: '#8257E6',
+    { id: 'forca', name: 'Jogo da Forca', emoji: '🧩', color: '#8257E6',
       desc: 'Descubra a palavra da lição pelas dicas, letra por letra.' },
     { id: 'memoria', name: 'Jogo da Memória', emoji: '🧠', color: '#12A47A',
       desc: 'Encontre os pares de palavras, textos e imagens da lição.' },

@@ -1,7 +1,7 @@
 # Meu Jogo Bíblico
 
 Plataforma web de estudo bíblico para **crianças (Kids)** e **adolescentes (Teens)**, com
-questionário e seis jogos montados a partir do conteúdo exato de cada material.
+questionário e sete jogos montados a partir do conteúdo exato de cada material.
 
 **Fonte exclusiva do conteúdo:** o site oficial **jw.org**
 - *Aprenda com as Histórias da Bíblia* (símbolo `lfb`) — **103 histórias** já carregadas
@@ -37,7 +37,7 @@ outra porta: `python servidor.py 9000`.
 
 ### 1. Biblioteca pronta (163 lições)
 Os dois livros já vêm carregados e indexados por seção/parte. Ao abrir a **Lição X**,
-os sete jogos usam **exclusivamente** o conteúdo da Lição X — a chave `lfb-<n>` / `lff-<n>`
+os oito jogos usam **exclusivamente** o conteúdo da Lição X — a chave `lfb-<n>` / `lff-<n>`
 amarra título, texto base, perguntas, palavras-chave e pares ao número da lição.
 
 ### 2. Link do jw.org → questionário e jogos sobre aquele assunto
@@ -64,7 +64,7 @@ Cada material gerado vira um item `web-1`, `web-2`… guardado neste aparelho, c
 de **gerar as perguntas de novo** e **apagar**. Eles aparecem como um terceiro "livro"
 na Biblioteca.
 
-### 3. Sete modos de jogo por lição
+### 3. Oito modos de jogo por lição
 | Jogo | O que usa |
 |---|---|
 | 🧭 Questionário | 10 perguntas de múltipla escolha, com correção imediata |
@@ -74,15 +74,52 @@ na Biblioteca.
 | 🧠 Jogo da Memória | pares "palavra ↔ significado" (ou imagens que você colocar) |
 | 🔍 Caça-Palavras | grade gerada na hora, 8 direções, com as palavras da lição |
 | ✏️ Dissertativas | campo aberto + retorno imediato mostrando os pontos-chave |
+| 🎲 Jogo de Tabuleiro | de 2 a 4 jogadores, dado virtual e as perguntas da lição |
 
-### 4. Criador de Jogos (edição manual)
+### 4. Jogo de Tabuleiro (de 2 a 4 jogadores)
+Para jogar junto, na mesma tela. Antes de começar, cada jogador escolhe **o nome, a cor
+do pino e o bichinho** (se já houver estudantes cadastrados, o nome e a cor deles vêm
+preenchidos). Cores repetidas não são aceitas, para ninguém se confundir.
+
+O tabuleiro é um caminho de **32 casas** em ziguezague por um céu ilustrado (sol, nuvens,
+arco-íris), com o que cada casa faz **escrito nela mesma** ("VOLTE 2", "DE NOVO"…).
+
+O jogador da vez **clica no dado** e depois **arrasta o próprio pino** até a casa que o dado
+mandou (a casa fica piscando; no celular dá para arrastar encostando o dedo, e a tela rola
+sozinha perto das bordas). Quem preferir pode apenas tocar na casa que pisca. Ao pousar,
+acontece uma destas coisas:
+
+| Casa | O que acontece |
+|---|---|
+| 🧭 Pergunta da lição | aparece o botão **Ver pergunta da lição** → múltipla escolha |
+| ⚡ Desafio rápido | uma frase de Verdadeiro ou Falso da lição |
+| 🔤 Palavra da lição | a dica aparece e você escolhe a palavra certa |
+| 🚀 Avance | “Boa! Avance uma casa.” / “Que rapidez! Avance duas casas.” |
+| 🐢 Volte | “**Que pena, volte uma casa!**” / “…volte duas casas!” |
+| ⭐ Estrela | ganha uma estrela |
+| 🔁 Jogue de novo | joga o dado outra vez |
+| 🌳 Descanso | fica onde está e passa a vez |
+
+Quem acerta a pergunta **ganha uma estrela e anda mais uma casa**. Quem erra vê a
+resposta certa e passa a vez. Vence quem chegar primeiro na bandeira 🏆 — no fim aparece
+a classificação com as estrelas e os acertos de cada um.
+
+### 5. Som em todo o site
+Todos os jogos têm som: acerto, erro, carta virada, balão estourando, o dado
+chacoalhando, o pino andando e a música de vitória. O botão **🔊 no topo** liga e desliga
+tudo, e a escolha fica guardada neste aparelho.
+
+Os sons são criados na hora pelo próprio navegador (Web Audio), então **não há arquivo de
+áudio para baixar**: funciona offline e não pesa no carregamento.
+
+### 6. Criador de Jogos (edição manual)
 Botão **✏️ Criador de Jogos** dentro de cada lição. Abas para editar perguntas,
 alternativas (marcando a correta), frases de V/F, palavras e dicas, perguntas abertas,
 balões e pares da memória — inclusive **enviando suas próprias imagens** (até 900 KB) ou
 colando emojis. Botões **Salvar** e **↺ Restaurar original** por aba. As edições ficam
 guardadas por lição e nunca afetam as outras.
 
-### 5. Estudantes
+### 7. Estudantes
 Cadastro completo (criar, editar, excluir) com **nome, idade, faixa (Kids/Teens),
 cor favorita e emoji**. Ao escolher o perfil ativo no topo, o site inteiro muda de cor,
 o placar passa a ser daquele estudante e as mensagens de parabéns usam o nome e o emoji
@@ -101,7 +138,8 @@ assets/
     core.js                   armazenamento, perfis, tema, rotas, utilidades
     catalog.js                livros, índice de lições, validação de links do jw.org
     gerador.js                monta perguntas e jogos a partir do texto de uma página
-    games.js                  os sete jogos
+    audio.js                  os sons do site (criados pelo navegador)
+    games.js                  os oito jogos
     ui.js                     telas (biblioteca, lição, jogo, criador, estudantes)
     data/
       lfb-a.js … lfb-d.js     histórias 1-26, 27-52, 53-78, 79-103
@@ -124,7 +162,7 @@ partida. Para acrescentar ou corrigir conteúdo, basta editar esses arquivos (ou
 Criador de Jogos dentro do site).
 
 Se você editar algum arquivo e o navegador continuar mostrando a versão antiga, troque
-`?v=2` por `?v=3` nas tags `<script>` e `<link>` do `index.html`.
+`?v=3` por `?v=4` nas tags `<script>` e `<link>` do `index.html`.
 
 ---
 

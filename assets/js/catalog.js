@@ -412,7 +412,9 @@
     { id: 'caca', name: 'Caça-Palavras', emoji: '🔍', color: '#F2762E',
       desc: 'Ache as palavras-chave escondidas no quadro de letras.' },
     { id: 'escrita', name: 'Perguntas Dissertativas', emoji: '✏️', color: '#E8A600',
-      desc: 'Escreva a resposta com suas palavras e receba um retorno na hora.' }
+      desc: 'Escreva a resposta com suas palavras e receba um retorno na hora.' },
+    { id: 'tabuleiro', name: 'Jogo de Tabuleiro', emoji: '🎲', color: '#E5468E',
+      desc: 'De 2 a 4 jogadores, cada um com seu pino colorido. Jogue o dado e responda!' }
   ];
   MJB.GAMES = GAMES;
 
@@ -432,6 +434,7 @@
       case 'memoria': return memoryPairs(c).length;
       case 'caca': return c.w.filter(function (x) { return gridWord(x[0]).length >= 3; }).length;
       case 'escrita': return c.d.length;
+      case 'tabuleiro': return (c.q.length || c.vf.length) ? 32 : 0;
     }
     return 0;
   }

@@ -16,7 +16,8 @@
     theme: null,          // null = segue o sistema
     progress: {},         // progress[studentId][lessonId][gameId] = {score, total, pct, at}
     custom: {},           // custom[lessonId] = { q:[], vf:[], w:[], d:[], pop:[], mem:[] }
-    web: []               // materiais gerados a partir de links do jw.org
+    web: [],              // materiais gerados a partir de links do jw.org
+    som: true             // sons do site ligados
   };
 
   function load() {
@@ -412,6 +413,9 @@
     applyAccent();
 
     document.getElementById('btnTheme').addEventListener('click', cycleTheme);
+    document.getElementById('btnSom').addEventListener('click', MJB.alternarSom);
+    MJB.pintarBotaoSom();
+    MJB.ligarCliqueGlobal();
     document.getElementById('btnProfile').addEventListener('click', function () {
       if (MJB.showProfilePicker) MJB.showProfilePicker();
     });

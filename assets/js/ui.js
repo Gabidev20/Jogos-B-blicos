@@ -88,7 +88,7 @@
       (s ? 'Oi, ' + esc(s.name) + '! ' + esc(s.emoji) + ' Qual lição vamos jogar hoje?'
          : 'Estudo da Bíblia que vira brincadeira') + '</h1>' +
       '<p class="lead" style="margin-top:10px">Escolha uma lição dos dois livros já carregados — ou cole o link de ' +
-      'qualquer artigo ou vídeo do jw.org e o site lê aquela página e monta o questionário e os sete jogos ' +
+      'qualquer artigo ou vídeo do jw.org e o site lê aquela página e monta o questionário e os oito jogos ' +
       'sobre o assunto dela.</p>';
 
     var acts = h('div', 'row');
@@ -125,7 +125,7 @@
         '<p>' + esc(B.blurb) + '</p>' +
         '<span class="bookcard__meta">' +
         '<span><b>' + MJB.BY_BOOK[id].length + '</b>' + esc(B.unitPlural) + '</span>' +
-        '<span><b>' + (MJB.BY_BOOK[id].length * 7) + '</b>jogos prontos</span>' +
+        '<span><b>' + (MJB.BY_BOOK[id].length * MJB.GAMES.length) + '</b>jogos prontos</span>' +
         '<span><b>' + done + '</b>já jogadas</span>' +
         '</span>';
       books.appendChild(a);
@@ -267,7 +267,7 @@
 
     var sec = h('section', 'stack');
     var headRow = el('div', { class: 'section-head' },
-      '<div><div class="eyebrow">Seis jogos + questionário</div>' +
+      '<div><div class="eyebrow">Sete jogos + questionário</div>' +
       '<h2>Tudo aqui usa só o conteúdo desta lição</h2></div>');
     var edit = el('a', { class: 'btn btn--ghost btn--sm', href: '#/editor/' + L.id }, '✏️ Criador de Jogos');
     headRow.appendChild(edit);
@@ -409,7 +409,7 @@
       '<h1 style="font-size:clamp(1.5rem,4.6vw,2.2rem);margin-top:8px">Cole o link do artigo ou vídeo</h1>' +
       '<p class="lead" style="margin-top:8px">Vale qualquer página do domínio oficial <strong>jw.org</strong>: ' +
       'artigo, matéria de revista, lição de livro ou vídeo. O site lê o texto daquela página e monta ' +
-      'o questionário e os sete jogos em cima do assunto dela.</p>';
+      'o questionário e os oito jogos em cima do assunto dela.</p>';
     main.appendChild(head);
 
     var form = h('section', 'panel stack');
@@ -672,7 +672,7 @@
     panel.appendChild(ol);
 
     var row = h('div', 'row');
-    row.appendChild(el('a', { class: 'btn', href: '#/licao/' + L.id }, '🎲 Abrir os 7 jogos'));
+    row.appendChild(el('a', { class: 'btn', href: '#/licao/' + L.id }, '🎲 Abrir os 8 jogos'));
     row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/jogar/' + L.id + '/quiz' }, '🧭 Começar o questionário'));
     row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/editor/' + L.id }, '✏️ Editar perguntas'));
     panel.appendChild(row);
@@ -709,7 +709,7 @@
     panel.appendChild(ol);
 
     var row = h('div', 'row');
-    row.appendChild(el('a', { class: 'btn', href: '#/licao/' + L.id }, '🎲 Abrir os 7 jogos'));
+    row.appendChild(el('a', { class: 'btn', href: '#/licao/' + L.id }, '🎲 Abrir os 8 jogos'));
     row.appendChild(el('a', { class: 'btn btn--ghost', href: '#/jogar/' + L.id + '/quiz' }, '🧭 Começar o questionário'));
     var outro = el('button', { class: 'btn btn--ghost', type: 'button' },
       '🔁 Prefiro gerar do texto da página');

@@ -1,0 +1,298 @@
+{
+ "fases": [
+  {
+   "id": 1,
+   "titulo": "FUNDAMENTOS",
+   "icone": "🔤",
+   "cor": "bg-sky-500",
+   "categorias": [
+    "alfabeto",
+    "cores",
+    "animais"
+   ]
+  },
+  {
+   "id": 2,
+   "titulo": "AÇÕES E VALORES",
+   "icone": "❤️",
+   "cor": "bg-rose-500",
+   "categorias": [
+    "conceitos"
+   ]
+  },
+  {
+   "id": 3,
+   "titulo": "VOCABULÁRIO BÍBLICO",
+   "icone": "📖",
+   "cor": "bg-amber-500",
+   "categorias": [
+    "biblico"
+   ]
+  },
+  {
+   "id": 4,
+   "titulo": "BROCHURA",
+   "icone": "📘",
+   "cor": "bg-emerald-600",
+   "categorias": [],
+   "brochura": true
+  }
+ ],
+ "alfabeto": {
+  "letras": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "dactilologiaPath": "assets/dactilologia/{l}.svg"
+ },
+ "termos": [
+  {
+   "id": "azul",
+   "palavra": "AZUL",
+   "categoria": "cores",
+   "emoji": "🟦",
+   "videoLibrasUrl": "assets/libras/azul.mp4",
+   "ilustracaoUrl": "assets/img/azul.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "vermelho",
+   "palavra": "VERMELHO",
+   "categoria": "cores",
+   "emoji": "🟥",
+   "videoLibrasUrl": "assets/libras/vermelho.mp4",
+   "ilustracaoUrl": "assets/img/vermelho.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "verde",
+   "palavra": "VERDE",
+   "categoria": "cores",
+   "emoji": "🟩",
+   "videoLibrasUrl": "assets/libras/verde.mp4",
+   "ilustracaoUrl": "assets/img/verde.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "amarelo",
+   "palavra": "AMARELO",
+   "categoria": "cores",
+   "emoji": "🟨",
+   "videoLibrasUrl": "assets/libras/amarelo.mp4",
+   "ilustracaoUrl": "assets/img/amarelo.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "cachorro",
+   "palavra": "CACHORRO",
+   "categoria": "animais",
+   "emoji": "🐶",
+   "videoLibrasUrl": "assets/libras/cachorro.mp4",
+   "ilustracaoUrl": "assets/img/cachorro.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "gato",
+   "palavra": "GATO",
+   "categoria": "animais",
+   "emoji": "🐱",
+   "videoLibrasUrl": "assets/libras/gato.mp4",
+   "ilustracaoUrl": "assets/img/gato.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "passaro",
+   "palavra": "PÁSSARO",
+   "categoria": "animais",
+   "emoji": "🐦",
+   "videoLibrasUrl": "assets/libras/passaro.mp4",
+   "ilustracaoUrl": "assets/img/passaro.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "peixe",
+   "palavra": "PEIXE",
+   "categoria": "animais",
+   "emoji": "🐟",
+   "videoLibrasUrl": "assets/libras/peixe.mp4",
+   "ilustracaoUrl": "assets/img/peixe.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "amor",
+   "palavra": "AMOR",
+   "categoria": "conceitos",
+   "emoji": "🤗❤️",
+   "videoLibrasUrl": "assets/libras/amor.mp4",
+   "ilustracaoUrl": "assets/img/amor.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "ajudar",
+   "palavra": "AJUDAR",
+   "categoria": "conceitos",
+   "emoji": "🤝",
+   "videoLibrasUrl": "assets/libras/ajudar.mp4",
+   "ilustracaoUrl": "assets/img/ajudar.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "querer",
+   "palavra": "QUERER",
+   "categoria": "conceitos",
+   "emoji": "🙋",
+   "videoLibrasUrl": "assets/libras/querer.mp4",
+   "ilustracaoUrl": "assets/img/querer.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "certo",
+   "palavra": "CERTO",
+   "categoria": "conceitos",
+   "emoji": "✅",
+   "videoLibrasUrl": "assets/libras/certo.mp4",
+   "ilustracaoUrl": "assets/img/certo.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "errado",
+   "palavra": "ERRADO",
+   "categoria": "conceitos",
+   "emoji": "❌",
+   "videoLibrasUrl": "assets/libras/errado.mp4",
+   "ilustracaoUrl": "assets/img/errado.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "criador",
+   "palavra": "CRIADOR",
+   "categoria": "biblico",
+   "emoji": "🌌✋",
+   "videoLibrasUrl": "assets/libras/criador.mp4",
+   "ilustracaoUrl": "assets/img/criador.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "jeova",
+   "palavra": "JEOVÁ",
+   "categoria": "biblico",
+   "emoji": "☀️",
+   "videoLibrasUrl": "assets/libras/jeova.mp4",
+   "ilustracaoUrl": "assets/img/jeova.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "jesus",
+   "palavra": "JESUS",
+   "categoria": "biblico",
+   "emoji": "🧔",
+   "videoLibrasUrl": "assets/libras/jesus.mp4",
+   "ilustracaoUrl": "assets/img/jesus.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "orar",
+   "palavra": "ORAR",
+   "categoria": "biblico",
+   "emoji": "🙏",
+   "videoLibrasUrl": "assets/libras/orar.mp4",
+   "ilustracaoUrl": "assets/img/orar.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "vida",
+   "palavra": "VIDA",
+   "categoria": "biblico",
+   "emoji": "🌱",
+   "videoLibrasUrl": "assets/libras/vida.mp4",
+   "ilustracaoUrl": "assets/img/vida.svg",
+   "dactilologiaUrl": ""
+  },
+  {
+   "id": "terra",
+   "palavra": "TERRA",
+   "categoria": "biblico",
+   "emoji": "🌍",
+   "videoLibrasUrl": "assets/libras/terra.mp4",
+   "ilustracaoUrl": "assets/img/terra.svg",
+   "dactilologiaUrl": ""
+  }
+ ],
+ "brochura": {
+  "titulo": "Escute a Deus e Viva para Sempre",
+  "videos": [
+   {
+    "n": 1,
+    "url": "ll_LSB_01_r360P.m4v",
+    "titulo": "Introdução — Deus é como um pai amoroso"
+   },
+   {
+    "n": 2,
+    "url": "ll_LSB_02_r360P.m4v",
+    "titulo": "Lição 01 — Como podemos escutar a Deus?"
+   },
+   {
+    "n": 3,
+    "url": "ll_LSB_03_r360P.m4v",
+    "titulo": "Lição 02 — Quem é o Deus verdadeiro?"
+   },
+   {
+    "n": 4,
+    "url": "ll_LSB_04_r360P.m4v",
+    "titulo": "Lição 03 — Como era a vida no Paraíso?"
+   },
+   {
+    "n": 5,
+    "url": "ll_LSB_05_r360P.m4v",
+    "titulo": "Lição 04 — Eles escutaram a Satanás — qual foi o resultado?"
+   },
+   {
+    "n": 6,
+    "url": "ll_LSB_06_r360P.m4v",
+    "titulo": "Lição 05 — O grande Dilúvio — quem escutou a Deus?"
+   },
+   {
+    "n": 7,
+    "url": "ll_LSB_07_r360P.m4v",
+    "titulo": "Lição 06 — O que podemos aprender do grande Dilúvio?"
+   },
+   {
+    "n": 8,
+    "url": "ll_LSB_08_r360P.m4v",
+    "titulo": "Lição 07 — Quem foi Jesus?"
+   },
+   {
+    "n": 9,
+    "url": "ll_LSB_09_r360P.m4v",
+    "titulo": "Lição 08 — O que a morte de Jesus significa para você?"
+   },
+   {
+    "n": 10,
+    "url": "ll_LSB_10_r360P.m4v",
+    "titulo": "Lição 09 — Quando virá o Paraíso?"
+   },
+   {
+    "n": 11,
+    "url": "ll_LSB_11_r360P.m4v",
+    "titulo": "Lição 10 — Que bênçãos receberão aqueles que escutam a Deus?"
+   },
+   {
+    "n": 12,
+    "url": "ll_LSB_12_r360P.m4v",
+    "titulo": "Lição 11 — Será que Jeová nos escuta?"
+   },
+   {
+    "n": 13,
+    "url": "ll_LSB_13_r360P.m4v",
+    "titulo": "Lição 12 — Como sua vida em família pode ser feliz?"
+   },
+   {
+    "n": 14,
+    "url": "ll_LSB_14_r360P.m4v",
+    "titulo": "Lição 13 — O que precisamos fazer para agradar a Deus?"
+   },
+   {
+    "n": 15,
+    "url": "ll_LSB_15_r360P.m4v",
+    "titulo": "Lição 14 — Como você pode mostrar lealdade a Jeová?"
+   }
+  ]
+ }
+}

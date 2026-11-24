@@ -1094,8 +1094,11 @@
         { id: 'tbCasa', label: 'Casa', value: '0' }
       ]);
 
+      var palco = el('div', { class: 'tab-palco' });
+      host.appendChild(palco);
+      var lado = el('div', { class: 'tab-lado' });
       var placar = el('div', { class: 'tab-placar' });
-      host.appendChild(placar);
+      lado.appendChild(placar);
 
       /* --- o cenário --- */
 
@@ -1105,7 +1108,8 @@
         '<svg class="tab-morros" viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true">' +
         '<path d="M0 90V48q58-28 118-8t142-6 140 14v42z" fill="#2E9E6B" opacity=".9"/>' +
         '<path d="M0 90V64q72-20 132 2t148-4 120 10v18z" fill="#3FBE80"/></svg>';
-      host.appendChild(cena);
+      palco.appendChild(cena);
+      palco.appendChild(lado);
 
       var board = el('div', { class: 'tab-board', role: 'group',
         'aria-label': 'Tabuleiro com ' + CASAS.length + ' casas' });
@@ -1136,27 +1140,59 @@
 
       var enfeites = [];
 
-      function colunas() {
-        var w = board.clientWidth || global.innerWidth || 900;
-        return w >= 760 ? 7 : w >= 520 ? 5 : 4;
+      /** Linhas que o caminho ocupa com N colunas. */
+      function linhasDoCaminho(cols) {
+        var pos = caminho(CASAS.length, cols), m = 0;
+        for (var i = 0; i < pos.length; i++) if (pos[i].r > m) m = pos[i].r;
+        return m;
       }
 
-      /** Posiciona as casas no ziguezague e espalha os enfeites nas sobras. */
+      /** Dá ao palco a altura que sobra na tela, para tudo caber sem rolar. */
+      function medirPalco() {
+        var cab = document.querySelector('.topbar');
+        var hCab = cab ? cab.getBoundingClientRect().height : 0;
+        var barra = host.querySelector('.playbar');
+        var vh = global.innerHeight || 800;
+        if (barra && barra.isConnected) {
+          // põe a barra do jogo logo abaixo do cabeçalho fixo
+          global.scrollBy(0, barra.getBoundingClientRect().top - hCab - 8);
+        }
+        var hBarra = barra ? barra.getBoundingClientRect().height : 0;
+        var h = vh - hCab - hBarra - 8 - 12 - 14;
+        palco.style.height = Math.max(h, 420) + 'px';
+      }
+
+      /** Escolhe quantas colunas deixam as casas maiores, cabendo na área do cenário. */
       function arrumar() {
-        if (!board.isConnected) {
-          global.removeEventListener('resize', arrumar);
+        if (!palco.isConnected) {
+          global.removeEventListener('resize', onResize);
           return;
         }
-        var cols = colunas();
+        medirPalco();
+
+        var pad = (global.innerWidth || 1000) <= 560 ? 8 : 14, gap = 5;
+        var W = (cena.clientWidth || 640) - pad * 2;
+        var H = (cena.clientHeight || 460) - pad * 2;
+        var melhor = { cols: 6, lado: 0 }, cols, rows, lado1;
+        for (cols = 4; cols <= 12; cols++) {
+          rows = linhasDoCaminho(cols);
+          lado1 = Math.min((W - gap * (cols - 1)) / cols, (H - gap * (rows - 1)) / rows);
+          if (lado1 > melhor.lado) melhor = { cols: cols, lado: lado1 };
+        }
+        cols = melhor.cols;
+        var cel = Math.max(26, Math.min(Math.floor(melhor.lado), 96));
         var pos = caminho(CASAS.length, cols);
-        var linhas = 0, ocupadas = {}, i;
+        var linhas = linhasDoCaminho(cols), ocupadas = {}, i;
 
         board.style.setProperty('--cols', cols);
+        board.style.setProperty('--casa', cel + 'px');
+        board.style.setProperty('--gap', gap + 'px');
+        board.style.gridTemplateColumns = 'repeat(' + cols + ', ' + cel + 'px)';
+        board.style.gridAutoRows = cel + 'px';
         for (i = 0; i < celulas.length; i++) {
           celulas[i].style.gridColumn = String(pos[i].c);
           celulas[i].style.gridRow = String(pos[i].r);
           ocupadas[pos[i].r + ':' + pos[i].c] = 1;
-          if (pos[i].r > linhas) linhas = pos[i].r;
         }
 
         // sobras largas o bastante para caber um enfeite
@@ -1174,12 +1210,8 @@
             }
           }
         }
-        // a tipografia das casas acompanha o tamanho real delas
-        var larg = celulas[0].getBoundingClientRect().width;
-        if (larg) board.style.setProperty('--casa', Math.round(larg) + 'px');
-
         vagas.sort(function (a, b) { return (b.ate - b.de) - (a.ate - a.de); });
-        vagas.slice(0, Math.min(ENFEITES.length, cols >= 5 ? 6 : 3)).forEach(function (v, k) {
+        vagas.slice(0, ENFEITES.length).forEach(function (v, k) {
           var largura = Math.min(3, v.ate - v.de + 1);
           var dentro = v.de + Math.floor((v.ate - v.de + 1 - largura) / 2);
           var d = el('div', { class: 'tab-enfeite', 'aria-hidden': 'true' }, ENFEITES[k % ENFEITES.length]());
@@ -1189,8 +1221,10 @@
           enfeites.push(d);
         });
       }
+
+      function onResize() { arrumar(); }
       arrumar();
-      global.addEventListener('resize', arrumar);
+      global.addEventListener('resize', onResize);
 
       /* --- pinos e placar --- */
 
@@ -1254,16 +1288,9 @@
         document.body.appendChild(fantasma);
         pino.classList.add('is-levando');
         board.classList.add('is-arrastando');
-        var ultimoY = ev.clientY;
-        var rolador = setInterval(function () {
-          var vh = global.innerHeight || 800;
-          if (ultimoY < 100) global.scrollBy(0, -16);
-          else if (ultimoY > vh - 100) global.scrollBy(0, 16);
-        }, 16);
         mover(ev.clientX, ev.clientY);
 
         function mover(x, y) {
-          ultimoY = y;
           fantasma.style.left = x + 'px';
           fantasma.style.top = y + 'px';
           var sob = casaSob(x, y);
@@ -1277,7 +1304,6 @@
           document.removeEventListener('pointermove', aoMover);
           document.removeEventListener('pointerup', aoSoltar);
           document.removeEventListener('pointercancel', aoSoltar);
-          clearInterval(rolador);
           fantasma.remove();
           pino.classList.remove('is-levando');
           board.classList.remove('is-arrastando');
@@ -1342,7 +1368,6 @@
           pintarPinos();
           pintarPlacar();
           bar.set('tbCasa', String(j.pos));
-          celulas[j.pos].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
           setTimeout(passo, 260);
         })();
       }
@@ -1350,7 +1375,7 @@
       /* --- o dado --- */
 
       var acao = el('div', { class: 'tab-acao' });
-      host.appendChild(acao);
+      lado.appendChild(acao);
 
       var PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
 
@@ -1364,6 +1389,7 @@
 
       function telaDado(recado) {
         destino = null;
+        lado.classList.remove('lado--pergunta');
         acao.innerHTML = '';
         var caixa = el('div', { class: 'panel tab-turno' });
         caixa.innerHTML =
@@ -1424,19 +1450,6 @@
           '<small>Prefere não arrastar? Toque direto na casa que está piscando.</small></span>';
         dado.disabled = true;
         acao.appendChild(instrucao);
-        enquadrar(celulas[j.pos], casaAlvo);
-      }
-
-      /** Rola a página para o pino e a casa-alvo aparecerem juntos (se couberem). */
-      function enquadrar(de, para) {
-        var a = de.getBoundingClientRect(), b = para.getBoundingClientRect();
-        var topo = Math.min(a.top, b.top), base = Math.max(a.bottom, b.bottom);
-        var vh = global.innerHeight || 800;
-        var margem = 110;                                 // espaço do cabeçalho fixo
-        var alvoY;
-        if (base - topo <= vh - margem * 2) alvoY = (topo + base) / 2 - vh / 2;   // cabe: centraliza os dois
-        else alvoY = a.top - margem;                      // não cabe: mostra o pino, a rolagem do arraste faz o resto
-        global.scrollBy(0, alvoY);
       }
 
       /* --- o que acontece ao parar --- */
@@ -1481,6 +1494,7 @@
 
       /** Cartão com a frase da casa e um botão para seguir. */
       function recado(casa, tom, depois, rotulo) {
+        lado.classList.remove('lado--pergunta');
         acao.innerHTML = '';
         var T = TIPOS[casa.t];
         var caixa = el('div', { class: 'panel tab-recado tab-recado--' + tom });
@@ -1492,11 +1506,12 @@
         b.addEventListener('click', depois);
         caixa.appendChild(b);
         acao.appendChild(caixa);
-        b.focus();
+        b.focus({ preventScroll: true });
       }
 
       /** Casa de conteúdo: mostra a frase e o botão "Ver pergunta da lição". */
       function casaDePergunta(casa) {
+        lado.classList.remove('lado--pergunta');
         acao.innerHTML = '';
         var T = TIPOS[casa.t];
         var caixa = el('div', { class: 'panel tab-recado tab-recado--neutro' });
@@ -1510,7 +1525,7 @@
         b.addEventListener('click', function () { perguntar(casa); });
         caixa.appendChild(b);
         acao.appendChild(caixa);
-        b.focus();
+        b.focus({ preventScroll: true });
       }
 
       function perguntar(casa) {
@@ -1520,6 +1535,7 @@
         if (tipo === 'pergunta' && !temPergunta) tipo = 'desafio';
 
         acao.innerHTML = '';
+        lado.classList.add('lado--pergunta');      // dá o espaço todo para a pergunta
         var card = el('div', { class: 'qcard' });
         acao.appendChild(card);
 
@@ -1634,7 +1650,7 @@
           });
         });
         card.appendChild(b);
-        b.focus();
+        b.focus({ preventScroll: true });
       }
 
       function passarVez() {
@@ -1649,6 +1665,7 @@
       /* --- fim de jogo --- */
 
       function venceu(vencedor) {
+        lado.classList.remove('lado--pergunta');
         ocupado = true;
         destino = null;
         som('vitoria');
@@ -1685,7 +1702,6 @@
           'Voltar para a lição'));
         box.appendChild(linha);
         acao.appendChild(box);
-        box.scrollIntoView({ block: 'nearest' });
       }
 
       /* --- começa --- */

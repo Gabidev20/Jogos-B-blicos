@@ -81,6 +81,9 @@ Para jogar junto, na mesma tela. Antes de começar, cada jogador escolhe **o nom
 do pino e o bichinho** (se já houver estudantes cadastrados, o nome e a cor deles vêm
 preenchidos). Cores repetidas não são aceitas, para ninguém se confundir.
 
+Tudo cabe numa tela só, **sem rolar a página**: o tabuleiro fica de um lado e, do outro, o
+dado, o placar e as perguntas (no celular, o tabuleiro fica em cima e o painel embaixo).
+
 O tabuleiro é um caminho de **32 casas** em ziguezague por um céu ilustrado (sol, nuvens,
 arco-íris), com o que cada casa faz **escrito nela mesma** ("VOLTE 2", "DE NOVO"…).
 
